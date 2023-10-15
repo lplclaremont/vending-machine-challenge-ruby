@@ -1,7 +1,10 @@
-class CoinBank
-	attr_reader :coin_quantities, :deposited_funds
+require 'change_calculator'
 
-  def initialize(**quant)
+class CoinBank
+	attr_reader :coin_quantities, :deposited_funds, :change_calculator
+
+  def initialize(change_calculator, **quant)
+		@change_calculator = change_calculator
 		@coin_quantities =  {
 			200 => quant[:two_pound],
 			100 => quant[:one_pound],
@@ -18,6 +21,14 @@ class CoinBank
 	def deposit_coin(coin_value)
 		@deposited_funds += coin_value
 		add_coin(coin_value)
+	end
+
+	def dispense_change(item_value)
+		change = change_calculator.get_change(self, item_value)
+
+		change.each do |coin_value|
+			coin_quantities[coin_value] -= 1
+		end
 	end
 
 	def add_coin(coin_value)
