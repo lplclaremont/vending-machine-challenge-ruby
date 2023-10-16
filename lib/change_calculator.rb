@@ -4,21 +4,23 @@ class ChangeCalculator
 	end
 
 	def get_change(coin_bank, change_value, *index)
-		index = index[0] || 0
+		coin_index = index[0] || 0
 		coins_and_quantities = coin_bank.coin_quantities.to_a
-		return [] if index >= coins_and_quantities.count || index < 0
 
-		coin_value = coins_and_quantities[index][0]
-		quantity = coins_and_quantities[index][1]
-		range = [quantity, change_value/coin_value].min
+		return [] if coin_index >= coins_and_quantities.count
 
-		r = range..0
-		(r.first).downto(r.last).each do |i|
-			remaining_change = change_value - (i * coin_value)
-			result = get_change(coin_bank, remaining_change, index+1)
+		coin_value = coins_and_quantities[coin_index][0]
+		quantity = coins_and_quantities[coin_index][1]
+		# find the maximum quantity of current coin
+		# that will fit into the total change
+		range_maximum = [quantity, change_value/coin_value].min
 
-			if (result.length > 0) || (remaining_change==0)
-				return [coin_value]*i + result
+		(range_maximum).downto(0).each do |q|
+			remaining_change = change_value - (q * coin_value)
+			result = get_change(coin_bank, remaining_change, coin_index + 1)
+
+			if (result.length > 0) || (remaining_change == 0)
+				return [coin_value]*q + result
 			end
 		end
 		return []
