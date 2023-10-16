@@ -24,10 +24,11 @@ class CoinBank
 	end
 
 	def dispense_change(item_value)
-		change = change_calculator.get_change(self, item_value)
+		change_value = deposited_funds - item_value
+		change = change_calculator.get_change(self, change_value)
 
 		change.each do |coin_value|
-			coin_quantities[coin_value] -= 1
+			remove_coin(coin_value)
 		end
 	end
 
