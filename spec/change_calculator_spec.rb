@@ -50,8 +50,8 @@ describe ChangeCalculator do
 				20 => 2,
 				10 => 20,
 				5 => 1,
-				2 => 0,
-				1 => 20,
+				2 => 3,
+				1 => 0,
 			}
 
 			it 'correctly uses different coin denomination to make change' do
@@ -59,6 +59,13 @@ describe ChangeCalculator do
 
 				change_calc = ChangeCalculator.new()
 				expect(change_calc.get_change(mock_coin_bank, 60)).to eq [20, 20, 10, 10]
+			end
+
+			it 'correctly uses different coin denomination to make change' do
+				mock_coin_bank = double('CoinBank', :coin_quantities => fake_quantities)
+
+				change_calc = ChangeCalculator.new()
+				expect(change_calc.get_change(mock_coin_bank, 6)).to eq [2, 2, 2]
 			end
 	end
 end
