@@ -16,6 +16,19 @@ describe 'CoinBank' do
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)												
 			expect(coin_bank.deposited_funds).to eq 0
 		end
+
+		it 'defaults to 0 quantity when no value given' do
+			mock_change_calc = double('ChangeCalculator')
+
+			coin_bank = CoinBank.new(mock_change_calc,
+				two_pound: 10, one_pound: 10, 
+				fifty_p: 10, ten_p: 10,
+				five_p: 10, one_p: 10)
+
+			expect(coin_bank.coin_quantities[20]).to eq 0
+			expect(coin_bank.coin_quantities[10]).to eq 10
+			expect(coin_bank.coin_quantities[2]).to eq 0
+		end
   end
 
 	describe '#add_coin' do

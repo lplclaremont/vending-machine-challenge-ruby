@@ -6,14 +6,14 @@ class CoinBank
   def initialize(change_calculator, **quant)
 		@change_calculator = change_calculator
 		@coin_quantities =  {
-			200 => quant[:two_pound],
-			100 => quant[:one_pound],
-			50 => quant[:fifty_p],
-			20 => quant[:twenty_p],
-			10 => quant[:ten_p],
-			5 => quant[:five_p],
-			2 => quant[:two_p],
-			1 => quant[:one_p],
+			200 => quant[:two_pound] || default_coin_quantity,
+			100 => quant[:one_pound] || default_coin_quantity,
+			50 => quant[:fifty_p] || default_coin_quantity,
+			20 => quant[:twenty_p] || default_coin_quantity,
+			10 => quant[:ten_p] || default_coin_quantity,
+			5 => quant[:five_p] || default_coin_quantity,
+			2 => quant[:two_p] || default_coin_quantity,
+			1 => quant[:one_p] || default_coin_quantity,
 		}
 		@deposited_funds = 0
 	end
@@ -38,5 +38,9 @@ class CoinBank
 
 	def remove_coin(coin_value)
 		coin_quantities[coin_value] -= 1 if coin_quantities[coin_value] > 0
+	end
+
+	def default_coin_quantity
+		0
 	end
 end
