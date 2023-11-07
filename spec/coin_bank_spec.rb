@@ -113,7 +113,7 @@ describe 'CoinBank' do
 			mock_change_calc = double('ChangeCalculator', :get_change => [])
 
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
-			coin_bank.dispense_change(10)
+			expect(coin_bank.dispense_change(10)).to eq 'unable to dispense correct change'
 			expect(coin_bank.coin_quantities[1]).to eq 1
 			expect(coin_bank.coin_quantities[2]).to eq 2
 			expect(coin_bank.coin_quantities[5]).to eq 3
@@ -124,9 +124,29 @@ describe 'CoinBank' do
 			allow(mock_change_calc).to receive(:get_change).with(any_args).and_return([10])
 		
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
-			coin_bank.dispense_change(10)
+			expect(coin_bank.dispense_change(10)).to eq [10]
 		
 			expect(coin_bank.coin_quantities[10]).to eq 3
+		end
+
+		it 'reduces the quantity of corresponding coin when one coin returned as change' do
+			mock_change_calc = double('ChangeCalculator')
+			allow(mock_change_calc).to receive(:get_change).with(any_args).and_return([10])
+		
+			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
+			expect(coin_bank.dispense_change(10)).to eq [10]
+		
+			expect(coin_bank.coin_quantities[10]).to eq 3
+		end
+
+		it 'returns a helpful string when machine can not return the correct change' do
+			mock_change_calc = double('ChangeCalculator')
+			allow(mock_change_calc).to receive(:get_change).with(any_args).and_return([])
+		
+			coin_bank = create_coin_bank(mock_change_calc, 0,0,0,0,0,0,0,0)
+			coin_bank.deposit_coin(20)
+
+			expect(coin_bank.dispense_change(10)).to eq 'unable to dispense correct change'
 		end
 	end
 end

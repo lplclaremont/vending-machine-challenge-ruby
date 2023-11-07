@@ -23,6 +23,7 @@ class ChangeCalculator
 				return [coin_value]*q + result
 			end
 		end
+		
 		return []
 	end
 end

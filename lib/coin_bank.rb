@@ -27,9 +27,15 @@ class CoinBank
 		change_value = deposited_funds - item_value
 		change = change_calculator.get_change(self, change_value)
 
+		if (change == [] && change_value != 0)
+			return "unable to dispense correct change"
+		end
+		
 		change.each do |coin_value|
 			remove_coin(coin_value)
 		end
+
+		change
 	end
 
 	def add_coin(coin_value)
