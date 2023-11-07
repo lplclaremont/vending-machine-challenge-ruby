@@ -30,12 +30,16 @@ class CoinBank
 		if (change == [] && change_value != 0)
 			return "unable to dispense correct change"
 		end
-		
+
 		change.each do |coin_value|
 			remove_coin(coin_value)
 		end
 
 		change
+	end
+
+	def reset_funds
+		@deposited_funds = 0
 	end
 
 	def add_coin(coin_value)

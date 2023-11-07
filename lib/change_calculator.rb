@@ -1,8 +1,5 @@
 class ChangeCalculator
 
-	def initialize()
-	end
-
 	def get_change(coin_bank, change_value, *index)
 		coin_index = index[0] || 0
 		coins_and_quantities = coin_bank.coin_quantities.to_a
