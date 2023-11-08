@@ -1,7 +1,7 @@
 require 'coin_bank'
 
 describe 'CoinBank' do
-  context 'initially' do
+	context 'initially' do
 		it 'contains coins with correct quantities given' do
 			mock_change_calc = double('ChangeCalculator')
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
@@ -27,7 +27,14 @@ describe 'CoinBank' do
 			expect(coin_bank.coin_quantities[10]).to eq 10
 			expect(coin_bank.coin_quantities[2]).to eq 0
 		end
-  end
+
+		it 'raises an error when a quantity is not integer > 0' do
+			mock_change_calc = double('ChangeCalculator')
+			expect {
+				CoinBank.new(mock_change_calc, two_pound: -1)
+			}.to raise_error("quantities must all be non negative integers")
+		end
+	end
 
 	describe '#add_coin' do
 		it 'adds one to the quantity of the corresponding coin' do
@@ -103,15 +110,24 @@ describe 'CoinBank' do
 			expect(coin_bank.coin_quantities[100]).to eq 8
 			expect(coin_bank.deposited_funds).to eq 130
 		end
+
+		it 'throws an error when coin value is not a correct denomination' do
+			mock_change_calc = double('ChangeCalculator')
+			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
+
+			expect { coin_bank.deposit_coin(15) }
+			.to raise_error("coin deposits must be a valid denomination")
+		end
 	end
 
 	describe '#dispense_change' do
 		it 'does not change coin_quantities when no change required' do
 			mock_change_calc = double('ChangeCalculator', :get_change => [])
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
-			
+			coin_bank.deposit_coin(10)
+
 			expect(coin_bank.dispense_change(10))
-			.to eq 'unable to dispense correct change'
+			.to eq []
 
 			expect(coin_bank.coin_quantities[1]).to eq 1
 			expect(coin_bank.coin_quantities[2]).to eq 2
@@ -123,6 +139,7 @@ describe 'CoinBank' do
 			allow(mock_change_calc).to receive(:get_change)
 			.with(any_args).and_return([10])
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
+			coin_bank.deposit_coin(20)
 
 			expect(coin_bank.dispense_change(10)).to eq [10]
 			expect(coin_bank.coin_quantities[10]).to eq 3
@@ -133,6 +150,7 @@ describe 'CoinBank' do
 			allow(mock_change_calc).to receive(:get_change)
 			.with(any_args).and_return([10])
 			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
+			coin_bank.deposit_coin(20)
 
 			expect(coin_bank.dispense_change(10)).to eq [10]
 			expect(coin_bank.coin_quantities[10]).to eq 3
@@ -148,12 +166,33 @@ describe 'CoinBank' do
 			expect(coin_bank.dispense_change(10))
 			.to eq 'unable to dispense correct change'
 		end
+
+		it 'returns a helpful string when item_value is greater than deposited_funds' do
+			mock_change_calc = double('ChangeCalculator')
+			allow(mock_change_calc).to receive(:get_change)
+			coin_bank = create_coin_bank(mock_change_calc, 20,20,20,20,20,20,20,20)
+			coin_bank.deposit_coin(20)
+
+			expect(coin_bank.dispense_change(30))
+			.to eq "more funds required for purchase"
+
+		end
+
+		it 'throws an error when item_value is not a non zero integer' do
+			mock_change_calc = double('ChangeCalculator')
+			allow(mock_change_calc).to receive(:get_change)
+			coin_bank = create_coin_bank(mock_change_calc, 8,7,6,5,4,3,2,1)
+			coin_bank.deposit_coin(20)
+
+			expect { coin_bank.dispense_change(15.4) }
+			.to raise_error("item value is not a valid money value")
+		end
 	end
 
 	describe '#reset_funds' do
 		it 'sets the deposited_funds value back to zero' do
 			mock_change_calc = double('ChangeCalculator')
-			coin_bank = create_coin_bank(1,2,3,4,5,6,7,8)
+			coin_bank = create_coin_bank(mock_change_calc, 1,2,3,4,5,6,7,8)
 			coin_bank.deposit_coin(20)
 
 			expect(coin_bank.deposited_funds).to eq 20
