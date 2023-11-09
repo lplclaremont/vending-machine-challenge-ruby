@@ -20,7 +20,7 @@ class CoinBank
 		return "more funds required for purchase" if item_value > deposited_funds
 
 		change_amount = deposited_funds - item_value
-		change = change_calculator.get_change(self, change_amount)
+		change = change_calculator.get_change(coin_quantities, change_amount)
 		if (change == [] && change_amount != 0)
 			return "unable to dispense correct change"
 		end
@@ -47,20 +47,16 @@ class CoinBank
 		end
 	end
 
-	def default_coin_quantity
-		0
-	end
-
 	def create_quantity_hash(quants)
 		{
-			200 => quants[:two_pound] || default_coin_quantity,
-			100 => quants[:one_pound] || default_coin_quantity,
-			50 => quants[:fifty_p] || default_coin_quantity,
-			20 => quants[:twenty_p] || default_coin_quantity,
-			10 => quants[:ten_p] || default_coin_quantity,
-			5 => quants[:five_p] || default_coin_quantity,
-			2 => quants[:two_p] || default_coin_quantity,
-			1 => quants[:one_p] || default_coin_quantity,
+			200 => quants[:two_pound] || 0,
+			100 => quants[:one_pound] || 0,
+			50 => quants[:fifty_p] || 0,
+			20 => quants[:twenty_p] || 0,
+			10 => quants[:ten_p] || 0,
+			5 => quants[:five_p] || 0,
+			2 => quants[:two_p] || 0,
+			1 => quants[:one_p] || 0,
 		}
 	end
 
