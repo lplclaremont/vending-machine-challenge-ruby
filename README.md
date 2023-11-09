@@ -11,7 +11,7 @@ My program structure includes the following two classes:
  - **CoinBank** which tracks the quantities of each coin inside the machine by updating the values as coins are entered by a user and change is returned.
  - **ChangeCalculator** which finds the coins required in change when a purchase is made based on the quantity of coins available and the amount to be returned.
 
-Therefore, we have a CoinBank class which utilises the ChangeCalculator class. These are dependent on each other as the ChangeCalculator also utilises an instance of CoinBank to find the change to be returned. Below is a basic demonstration of the public interfaces of both classes:
+Therefore, we have a CoinBank class which utilises the ChangeCalculator class. CoinBank is, therefore, dependent on ChangeCalculator since it calls a method on a change calculator instance from within it's dispense_change method. Below is a basic demonstration of the public interfaces of both classes:
 
 ![Screenshot of initial class interface design](./images/class-interfaces.png)
 
@@ -39,10 +39,11 @@ coin_bank = CoinBank.new(
 
 **Design choices:**
 - By using a ChangeCalculator class we are delegating the calculation of change to a seperate class so that this is more easily reusable should we require that functionality in another part of a wider application. It also ensures CoinBank has a single responsibility, and only updates the quantities without being concerned with how we calculate change.
-- Initialising CoinBank instances with a ChangeCalculator instance means that CoinBank does not need to create any instances for itself inside the class, making it less tightly dependent on ChangeCalculator (it only must know that there is a get_change method that it calls), and this also makes unit testing easier since we are able to mock the ChangeCalculator behaviour and pass it in for the purpose of unit testing CoinBank.
-- When we call get_change on the ChangeCalculator instance, an instance of CoinBank is passed in so that the change calculation can utilise the coin_quantities hash from the coin_bank. This means that a change_calculator just has to access something called 'coin_quantities' from whatever object is passed into it. This means we are not restricted by exactly what this object is, and we can reuse the ChangeCalculator class with other objects which contain a hash of coins and quantities. It could be reused for a vending machine in a different country, for example, with different coin values.
-- The CoinBank instances use keyword arguments to input quantities, which forces the programmer to be explicit when defining the initial quantity of each coin and also allows us to create a default quantity for a coin should they not input a value for each denomination.
+- Initialising CoinBank instances with a ChangeCalculator instance means that CoinBank does not need to create any instances for itself inside the class, making it less tightly dependent on ChangeCalculator (it only must know that there is a get_change method which it calls), and this also makes unit testing easier since we are able to mock the ChangeCalculator behaviour and pass it in for the purpose of unit testing CoinBank.
 - The coin_quantities hash stored in a CoinBank instance is of the format {coin_value => quantity}, with the coin_value being the number of pence (£1 = 100, 2p = 2 for example). This means we can easily access the coins by their monetary value which can be used in the calculation of change.
+- The CoinBank instances use keyword arguments to input quantities, which forces the programmer to be explicit when defining the initial quantity of each coin and also allows us to create a default quantity for a coin should they not input a value for each denomination.
+- When we call get_change on a ChangeCalculator instance, a hash of coin_quantities is passed in from the coin bank. Therefore, we are not restricted by what object uses the ChangeCalculator, only that it must have an appropriate hash of coin values and quantities. It could be reused for a vending machine in a different country, for example, with different coin denominations.
+
 
 **Edge cases:**
 I have raised exceptions with appropriate messages for the following cases:
