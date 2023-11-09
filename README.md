@@ -116,4 +116,4 @@ ruby dev_test_harness.rb
 ```
 And you'll see the following instructions:
 
-![Screenshot of developer test harness]('./images/test_harness_screenshot.png')
+![Screenshot of developer test harness](./images/test-harness-screenshot.png)
