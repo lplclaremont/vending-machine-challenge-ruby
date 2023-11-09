@@ -1,4 +1,4 @@
-require 'change_calculator'
+require_relative './change_calculator'
 
 class CoinBank
 	attr_reader :coin_quantities, :deposited_funds, :change_calculator

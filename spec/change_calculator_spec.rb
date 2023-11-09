@@ -10,7 +10,7 @@ describe ChangeCalculator do
 				10 => 20,
 				5 => 20,
 				2 => 20,
-				1 => 20,
+				1 => 20
 			}
 
 		it 'returns an empty array when change_value is zero' do
