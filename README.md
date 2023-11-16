@@ -13,7 +13,7 @@ My program structure includes the following two classes:
 
 Therefore, we have a CoinBank class which utilises the ChangeCalculator class. CoinBank is, therefore, dependent on ChangeCalculator since it calls a method on a change calculator instance from within it's dispense_change method. Below is a basic demonstration of the public interfaces of both classes:
 
-![Screenshot of initial class interface design](./images/class-interfaces.png)
+![Screenshot of initial class interface design](./images/class-interfaces-screenshot.png)
 
 As we can see, CoinBank has three main methods:
 - **deposit_coin:** Updates the value of deposited_funds and increments the respective coin quantity in the hash.

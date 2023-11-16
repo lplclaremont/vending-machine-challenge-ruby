@@ -11,8 +11,8 @@ class CoinBank
 	end
 
 	def deposit_coin(coin_value)
-		@deposited_funds += coin_value
 		add_coin(coin_value)
+		@deposited_funds += coin_value
 	end
 
 	def dispense_change(item_value)
@@ -82,7 +82,7 @@ class CoinBank
 	end
 
 	def non_negative_int?(n)
-		n >= 0 && n.is_a?(Integer)
+		n.is_a?(Integer) && n >= 0
 	end
 
 end

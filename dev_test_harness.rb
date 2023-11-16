@@ -27,7 +27,12 @@ def purchase_item(coin_bank)
     puts("i.e., £2.50 = 250, 79p = 79")
     puts("Note -- deposited funds: ", coin_bank.deposited_funds)
     begin
-        item_value = gets.chomp.to_i
+        user_input = gets.chomp
+        if user_input.to_i.to_s == user_input
+            item_value = user_input.to_i
+        else
+            item_value = user_input
+        end
         puts("Change received: ", coin_bank.dispense_change(item_value))
         coin_bank.reset_funds()
     rescue Exception => error
